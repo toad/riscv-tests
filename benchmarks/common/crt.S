@@ -114,24 +114,12 @@ _start:
   sll sp, sp, STKSHIFT
   add sp, sp, tp
 
-  lui t0, %tprel_hi(tls_start)
-  add t0, t0, %tprel_lo(tls_start)
-  sub tp, tp, t0
-
   la t0, _init
   csrw epc, t0
   sret
 
 trap_entry:
-  csrw sup0, sp
-  csrw sup1, t0
-  csrr t0, status
-  andi t0, t0, SR_PS
-  bnez t0, 1f
-  la sp, kstacktop
-1:
   addi sp, sp, -272
-  csrr t0, sup1
 
   SREG x1, 8(sp)
   SREG x2, 16(sp)
@@ -174,7 +162,7 @@ trap_entry:
   csrr a1, epc
   mv a2, sp
   jal handle_trap
-  csrw epc, v0
+  csrw epc, a0
 
   LREG t0, 256(sp)
   LREG t1, 264(sp)
@@ -213,13 +201,17 @@ trap_entry:
   LREG x30, 240(sp)
   LREG x31, 248(sp)
 
-  csrr sp, sup0
+  addi sp, sp, 272
   sret
 
-.bss
-.align 4
-.skip 4096
-kstacktop:
+.section ".tdata.begin"
+.globl _tdata_begin
+_tdata_begin:
 
-.section .tbss
-tls_start:
+.section ".tdata.end"
+.globl _tdata_end
+_tdata_end:
+
+.section ".tbss.end"
+.globl _tbss_end
+_tbss_end:

@@ -31,6 +31,8 @@ static void setStats(int enable) {}
 extern void setStats(int enable);
 #endif
 
+#include <stdint.h>
+
 extern int have_vec;
 
 #define static_assert(cond) switch(0) { case 0: case !!(long)(cond): ; }
@@ -109,8 +111,25 @@ static void __attribute__((noinline)) barrier(int ncores)
   __sync_synchronize();
 }
 
+static uint64_t lfsr(uint64_t x)
+{
+  uint64_t bit = (x ^ (x >> 1)) & 1;
+  return (x >> 1) | (bit << 62);
+}
+
 #ifdef __riscv
 #include "encoding.h"
 #endif
+
+#define stringify_1(s) #s
+#define stringify(s) stringify_1(s)
+#define stats(code, iter) do { \
+    unsigned long _c = -rdcycle(), _i = -rdinstret(); \
+    code; \
+    _c += rdcycle(), _i += rdinstret(); \
+    if (cid == 0) \
+      printf("\n%s: %ld cycles, %ld.%ld cycles/iter, %ld.%ld CPI\n", \
+             stringify(code), _c, _c/iter, 10*_c/iter%10, _c/_i, 10*_c/_i%10); \
+  } while(0)
 
 #endif //__UTIL_H

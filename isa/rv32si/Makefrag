@@ -5,6 +5,13 @@
 rv32si_sc_tests = \
 	csr \
 	shamt \
+	ma_fetch \
+	illegal \
+	privileged \
+	scall \
+	sbreak \
+	ma_addr \
+	timer \
 
 rv32si_mc_tests = \
 	ipi \

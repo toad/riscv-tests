@@ -134,6 +134,34 @@ RVTEST_CODE_BEGIN
   TEST_LD_OP( 76, ltag, 0x00, 16, tdat_w4 );
   TEST_LD_OP( 77, ltag, 0x02, 24, tdat_w4 );
 
+  #-------------------------------------------------------------
+  # Make sure data are reserved
+  #-------------------------------------------------------------
+
+  TEST_LD_OP( 78, ld, 0x00ff00ff00ff00ff, 0,  tdat );
+  TEST_LD_OP( 79, ld, 0xff00ff00ff00ff00, 8,  tdat );
+  TEST_LD_OP( 80, ld, 0x0ff00ff00ff00ff0, 16, tdat );
+  TEST_LD_OP( 81, ld, 0xf00ff00ff00ff00f, 24, tdat );
+
+  TEST_LD_OP( 82, ld, 0x1111222233334444, 0,  tdat_w1 );
+  TEST_LD_OP( 83, ld, 0x5555666677778888, 8,  tdat_w1 );
+  TEST_LD_OP( 84, ld, 0x9999aaaabbbbcccc, 16, tdat_w1 );
+  TEST_LD_OP( 85, ld, 0xddddeeeeffff0000, 24, tdat_w1 );
+
+  TEST_LD_OP( 86, ld, 0x1234123412341234, 0,  tdat_w2 );
+  TEST_LD_OP( 87, ld, 0x5678567856785678, 8,  tdat_w2 );
+  TEST_LD_OP( 88, ld, 0x9abc9abc9abc9abc, 16, tdat_w2 );
+  TEST_LD_OP( 89, ld, 0xdef0def0def0def0, 24, tdat_w2 );
+
+  TEST_LD_OP( 90, ld, 0x5c5c5c5c5c5c5c5c, 0,  tdat_w3 );
+  TEST_LD_OP( 91, ld, 0xc5c5c5c5c5c5c5c5, 8,  tdat_w3 );
+  TEST_LD_OP( 92, ld, 0xcccccccc55555555, 16, tdat_w3 );
+  TEST_LD_OP( 93, ld, 0x55555555cccccccc, 24, tdat_w3 );
+
+  TEST_LD_OP( 94, ld, 0x0123456789abcdef, 0,  tdat_w4 );
+  TEST_LD_OP( 95, ld, 0xfedcba9876543210, 8,  tdat_w4 );
+  TEST_LD_OP( 96, ld, 0xfedcba9801234567, 16, tdat_w4 );
+  TEST_LD_OP( 97, ld, 0x7654321089abcdef, 24, tdat_w4 );
   TEST_PASSFAIL
 
 RVTEST_CODE_END

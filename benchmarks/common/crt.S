@@ -114,27 +114,12 @@ _start:
   sll sp, sp, STKSHIFT
   add sp, sp, tp
 
-  # offset thread pointer by thread pointer bias
-  lui t0, %tprel_hi(tls_start)
-  add t0, t0, tp, %tprel_add(tls_start)
-  add t0, t0, %tprel_lo(tls_start)
-  sub t0, t0, tp
-  sub tp, tp, t0
-
   la t0, _init
   csrw epc, t0
   sret
 
 trap_entry:
-  csrw sup0, sp
-  csrw sup1, t0
-  csrr t0, status
-  andi t0, t0, SR_PS
-  bnez t0, 1f
-  la sp, kstacktop
-1:
   addi sp, sp, -272
-  csrr t0, sup1
 
   SREG x1, 8(sp)
   SREG x2, 16(sp)
@@ -216,13 +201,17 @@ trap_entry:
   LREG x30, 240(sp)
   LREG x31, 248(sp)
 
-  csrr sp, sup0
+  addi sp, sp, 272
   sret
 
-.bss
-.align 4
-.skip 4096
-kstacktop:
+.section ".tdata.begin"
+.globl _tdata_begin
+_tdata_begin:
 
-.section .tbss
-tls_start:
+.section ".tdata.end"
+.globl _tdata_end
+_tdata_end:
+
+.section ".tbss.end"
+.globl _tbss_end
+_tbss_end:
